@@ -44,10 +44,23 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		remove(quit);
 		
 		question[] questions = new question[10];
-		//Use a SQL Query to fill the array with questions in the topic the user has chosen.
-		
+
+		//for(int j;j<questions.length;j++){
+		//	int random = Rand.nextInt
+		//	questions[j].content = (
+		//	SELECT Content
+		//	FROM question
+		//	WHERE Topic = topic AND QuestionID = random
+		//	)
+		//	
+		//	questions[j].type = (
+		//	SELECT Type
+		//	FROM question
+		//	WHERE QuestionID = random
+		//	)
+
 		for(int i = 0;i<questions.length;i++){
-			if(questions[i].type == "Mulitple Choice"){
+			if(questions[i].type == "Multiple Choice"){
 				questionheader = new Label("Question " + i + " : " + questions[i].content);
 				multiquestion = new Choice();
 			}	

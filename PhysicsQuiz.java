@@ -63,7 +63,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		//for(int j;j<questions.length;j++){
 		//	Connection c = createConnection();
 		//	Statement st = c.createStatement();
-		//	int random = Rand.nextInt
+		//	int random = Rand.nextInt();
 		//	String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic "AND QuestionID = " + random;
 		//	ResultSet rs1 = st.executeQuery(sqlcontent);
 		//	ResultSet rs1 = st.getResultSet();

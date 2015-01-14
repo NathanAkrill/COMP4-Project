@@ -7,7 +7,7 @@ public Connection openConnection(){
 	Properties properties = new Properties();
 	properties.put("user", "root");
 	properties.put("password", "usbw");
-	properties.put("characterEncoding, "ISO-8859-1");
+	properties.put("characterEncoding", "ISO-8859-1");
 	properties.put("useUnicode, "true");
 	String url = "jdbc:mysql://localhost/pastpapers";
 	
@@ -72,7 +72,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		//			questions[j].content = rs1.getString(1);		
 		//		}
 		//	} finally {
-		//		rs1.close
+		//		rs1.close;
 		//	}
 		//	String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
 		//	ResultSet rs2 = st.executeQuery(sqltype);
@@ -82,7 +82,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		//			questions[j].type = rs2.getString(1);		
 		//		}
 		//	} finally {
-		//		rs2.close
+		//		rs2.close;
 		//	}
 		//	st.close();
 		//	c.close();

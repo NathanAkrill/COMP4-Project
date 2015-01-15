@@ -1,19 +1,17 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.util.*;
 
 //Will not work until ConnectorJ Driver is in classpath
-public Connection openConnection(){
+public Connection getConnection() throws SQLException{
+	Connection c = null;
 	Properties properties = new Properties();
-	properties.put("user", "root");
-	properties.put("password", "usbw");
-	properties.put("characterEncoding", "ISO-8859-1");
-	properties.put("useUnicode, "true");
-	String url = "jdbc:mysql://localhost/pastpapers";
-	
-	Class.forName("com.mysql.jdbc.Driver").newInstance();
-	Connection c = DriverManager.getConnection(url, properties);
-	return c;
+	properties.put("user", this.userName);
+	properties.put("password", this.password);
+	c = DriverManager.getConnection("jdbc:mysql://localhost:3306/pastpapers", properties);
+	System.out.println("Connected to database");
+	return conn;
 }
 
 public class PhysicsQuiz extends Frame implements WindowListener, ActionListener{
@@ -60,33 +58,33 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		
 		question[] questions = new question[10];
 
-		//for(int j;j<questions.length;j++){
-		//	Connection c = createConnection();
-		//	Statement st = c.createStatement();
-		//	int random = Rand.nextInt();
-		//	String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic "AND QuestionID = " + random;
-		//	ResultSet rs1 = st.executeQuery(sqlcontent);
-		//	ResultSet rs1 = st.getResultSet();
-		//	try{
-		//		while (rs1.next()){
-		//			questions[j].content = rs1.getString(1);		
-		//		}
-		//	} finally {
-		//		rs1.close;
-		//	}
-		//	String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
-		//	ResultSet rs2 = st.executeQuery(sqltype);
-		//	ResultSet rs2 = st.getResultSet();
-		//	try{
-		//		while (rs2.next()){
-		//			questions[j].type = rs2.getString(1);		
-		//		}
-		//	} finally {
-		//		rs2.close;
-		//	}
-		//	st.close();
-		//	c.close();
-		//}
+		for(int j;j<questions.length;j++){
+			Connection c = createConnection();
+			Statement st = c.createStatement();
+			int random = Rand.nextInt();
+			String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic "AND QuestionID = " + random;
+			ResultSet rs1 = st.executeQuery(sqlcontent);
+			ResultSet rs1 = st.getResultSet();
+			try{
+				while (rs1.next()){
+					questions[j].content = rs1.getString(1);		
+				}
+			} finally {
+				rs1.close;
+			}
+			String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
+			ResultSet rs2 = st.executeQuery(sqltype);
+			ResultSet rs2 = st.getResultSet();
+			try{
+				while (rs2.next()){
+					questions[j].type = rs2.getString(1);		
+				}
+			} finally {
+				rs2.close;
+			}
+			st.close();
+			c.close();
+		}
 
 		for(int i = 0;i<questions.length;i++){
 			if(questions[i].type == "Multiple Choice"){

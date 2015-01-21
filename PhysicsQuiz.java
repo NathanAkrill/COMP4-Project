@@ -11,7 +11,7 @@ public Connection getConnection() throws SQLException{
 	properties.put("password", this.password);
 	c = DriverManager.getConnection("jdbc:mysql://localhost:3306/pastpapers", properties);
 	System.out.println("Connected to database");
-	return conn;
+	return c;
 }
 
 public class PhysicsQuiz extends Frame implements WindowListener, ActionListener{

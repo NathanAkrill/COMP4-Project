@@ -3,13 +3,11 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 
-//Will not work until ConnectorJ Driver is in classpath
-public Connection getConnection() throws SQLException{
+public class Connect{
+	string user  = "admin";
+	string pass = "usb";
 	Connection c = null;
-	Properties properties = new Properties();
-	properties.put("user", this.userName);
-	properties.put("password", this.password);
-	c = DriverManager.getConnection("jdbc:mysql://localhost:3306/pastpapers", properties);
+	c = DriverManager.getConnection("jdbc:mysql://localhost:3306/pastpapers", user, pass);
 	System.out.println("Connected to database");
 	return c;
 }
@@ -62,7 +60,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			Connection c = createConnection();
 			Statement st = c.createStatement();
 			int random = Rand.nextInt();
-			String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic "AND QuestionID = " + random;
+			String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic + "AND QuestionID = " + random;
 			ResultSet rs1 = st.executeQuery(sqlcontent);
 			ResultSet rs1 = st.getResultSet();
 			try{

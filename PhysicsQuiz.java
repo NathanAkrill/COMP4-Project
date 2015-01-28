@@ -59,34 +59,34 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 
 		for(int j=0;j<questions.length;j++){
 			try{
-			Connection c = getConnection();
-			Statement st = c.createStatement();
-			int random = rand.nextInt(5);
-			String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic + "AND QuestionID = " + random;
-			ResultSet rs1 = st.executeQuery(sqlcontent);
-			rs1 = st.getResultSet();
-			try{
-				while (rs1.next()){
-					questions[j].content = rs1.getString(1);		
+				Connection c = getConnection();
+				Statement st = c.createStatement();
+				int random = rand.nextInt(25);
+				String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic + " AND QuestionNo = " + random;
+				ResultSet rs1 = st.executeQuery(sqlcontent);
+				rs1 = st.getResultSet();
+				try{
+					while (rs1.next()){
+						questions[j].content = rs1.getString(1);		
+					}
+				} finally {
+					rs1.close();
 				}
-			} finally {
-				rs1.close();
-			}
-			String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
-			ResultSet rs2 = st.executeQuery(sqltype);
-			rs2 = st.getResultSet();
-			try{
-				while (rs2.next()){
-					questions[j].type = rs2.getString(1);	
-					System.out.println(questions[j].type);
+				String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
+				ResultSet rs2 = st.executeQuery(sqltype);
+				rs2 = st.getResultSet();
+				try{
+					while (rs2.next()){
+						questions[j].type = rs2.getString(1);	
+						System.out.println(questions[j].type);
+					}
+				} finally {
+					rs2.close();
 				}
-			} finally {
-				rs2.close();
-			}
-			st.close();
-			c.close();
+				st.close();
+				c.close();
 			}catch(SQLException ex){
-			 System.out.println(ex);}
+				System.out.println(ex);}
 		}
 
 		for(int i = 0;i<questions.length;i++){

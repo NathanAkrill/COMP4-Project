@@ -61,20 +61,20 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			try{
 				Connection c = getConnection();
 				Statement st = c.createStatement();
-				int random = rand.nextInt(25);
-				String sqlcontent = "SELECT Content FROM question WHERE Topic = " + topic + " AND QuestionNo = " + random;
+				int random = rand.nextInt(33);
+				System.out.println(random);
+				String sqlcontent = "SELECT QuestionContent FROM question WHERE QuestionTopic = '" + topic + "' AND QuestionID = " + random;
 				ResultSet rs1 = st.executeQuery(sqlcontent);
-				rs1 = st.getResultSet();
 				try{
 					while (rs1.next()){
-						questions[j].content = rs1.getString(1);		
+						questions[j].content = rs1.getString(1);
+						System.out.println(questions[j].content);
 					}
 				} finally {
 					rs1.close();
 				}
-				String sqltype = "SELECT Type FROM question WHERE QuestionID = " + random;
+				String sqltype = "SELECT QuestionType FROM question WHERE QuestionTopic = '" + topic + "' AND QuestionID = " + random;
 				ResultSet rs2 = st.executeQuery(sqltype);
-				rs2 = st.getResultSet();
 				try{
 					while (rs2.next()){
 						questions[j].type = rs2.getString(1);	
@@ -86,7 +86,8 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				st.close();
 				c.close();
 			}catch(SQLException ex){
-				System.out.println(ex);}
+				System.out.println(ex);
+			}
 		}
 
 		for(int i = 0;i<questions.length;i++){
@@ -111,10 +112,12 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	public void actionPerformed(ActionEvent e){
 		String action = e.getActionCommand();
 		if(action.equals("Test!")){
-		try{
-			Test();
-		}
-		catch(SQLException ex){}
+			try{
+				Test();
+			}
+			catch(SQLException ex){
+				System.out.println(ex);
+			}
 		}
 		if(action.equals("View previous scores on this topic")){
 		

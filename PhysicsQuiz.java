@@ -56,6 +56,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		remove(quit);
 		
 		question[] questions = new question[10];
+		for(int k=0;k<questions.length;k++){
+			questions[k] = new question();
+		}
 
 		for(int j=0;j<questions.length;j++){
 			try{

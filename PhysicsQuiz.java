@@ -19,10 +19,12 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	private Button test;
 	private Button scores;
 	private Button quit;
+	private Button submit;
 	private Label questionheader;
 	private Choice multiquestion;
 	private TextField calculation;
 	private TextField equation;
+	private boolean answered = false;
 	public PhysicsQuiz(){
 		setLayout(new FlowLayout());
 		menuheader = new Label("Choose the topic you wish to revise.");
@@ -54,6 +56,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		remove(test);
 		remove(scores);
 		remove(quit);
+		remove(menuheader);
 		
 		question[] questions = new question[10];
 		for(int k=0;k<questions.length;k++){
@@ -94,17 +97,34 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}
 
 		for(int i = 0;i<questions.length;i++){
-			if(questions[i].type.equals("Multiple Choice")){
-				questionheader = new Label("Question " + i + " : " + questions[i].content);
-				multiquestion = new Choice();
-			}
-			if(questions[i].type.equals("Calculation")){
-				questionheader = new Label("Question " + i + " : " + questions[i].content);
-				calculation = new TextField();
-				equation = new TextField();
-			}
-			else{
-				System.out.println("Error. Cannot get results from query");
+			while(answered = false){
+				if(questions[i].type.equals("Multiple Choice")){
+					questionheader = new Label("Question " + i + " : " + questions[i].content);
+					add(questionheader);
+					multiquestion = new Choice();
+					add(multiquestion);
+					submit = new Button("Submit");
+					add(submit);
+					submit.addActionListener(this);
+					setVisible(true);
+					repaint();
+				}
+				if(questions[i].type.equals("Calculation")){
+					questionheader = new Label("Question " + i + " : " + questions[i].content);
+					add(questionheader);
+					calculation = new TextField("Enter your answer");
+					add(calculation);
+					equation = new TextField("Enter the equation");
+					add(equation);
+					submit = new Button("Submit");
+					add(submit);
+					submit.addActionListener(this);
+					setVisible(true);
+					repaint();
+				}
+				else{
+					System.out.println("Error. Cannot get results from query");
+				}
 			}
 		}
 		
@@ -124,6 +144,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}
 		if(action.equals("View previous scores on this topic")){
 		
+		}
+		if(action.equals("Submit")){
+			answered = true;
 		}
 		if(action.equals("Quit")){
 			System.exit(0);

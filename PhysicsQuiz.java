@@ -3,6 +3,7 @@ import java.awt.event.*;
 import java.sql.*;
 import java.util.*;
 import java.util.List;
+import javax.swing.*;
 
 public class PhysicsQuiz extends Frame implements WindowListener, ActionListener{
 	
@@ -23,13 +24,17 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	private Button submit;
 	private Label questionheader;
 	private Choice multiquestion;
-	private TextField calculation;
-	private TextField equation;
+	private JTextField calculation;
+	private JTextField equation;
 	private boolean answered = false;
 	String topic;
 	List<Integer> primaryKeys = new LinkedList<Integer>();
 	int questionNo = 0;
+	int score = 0;
 	question[] questions = new question[10];
+	String[] multianswers = new String[10];
+	String[] calcanswers = new String[10];
+	String[] eqanswers = new String[10];
 	public PhysicsQuiz(){
 		setLayout(new FlowLayout());
 		menuheader = new Label("Choose the topic you wish to revise.");
@@ -84,9 +89,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			else if(questions[questionNo].type.equals("Calculation")){
 				questionheader = new Label("Question " + questionNo + " : " + questions[questionNo].content);
 				add(questionheader);
-				calculation = new TextField("Enter your answer");
+				calculation = new JTextField(20);
 				add(calculation);
-				equation = new TextField("Enter the equation");
+				equation = new JTextField(20);
 				add(equation);
 				submit = new Button("Submit");
 				add(submit);
@@ -99,6 +104,22 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				System.out.println(questions[questionNo].content);
 				//Question about pigeons is broken.
 			}
+	}
+	public void Answers(){
+		if(questions[questionNo].type.equals("Multiple Choice")){
+			multianswers[questionNo] = multiquestion.getSelectedItem();
+		}
+		else if(questions[questionNo].type.equals("Calculation")){
+			calcanswers[questionNo] = calculation.getText();
+			eqanswers[questionNo] = equation.getText();
+			System.out.println(calcanswers[questionNo]);
+			System.out.println(eqanswers[questionNo]);
+		}
+		else{
+			System.out.println("Error. Cannot get results from query");
+			System.out.println(questions[questionNo].content);
+			//Question about pigeons is broken.
+		}
 	}
 	public void Test() throws SQLException{
 		remove(topiclist);
@@ -123,7 +144,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				try{
 					while (rs1.next()){
 						questions[j].content = rs1.getString(1);
-						System.out.println(questions[j].content);
+						//System.out.println(questions[j].content);
 					}
 				} finally {
 					rs1.close();
@@ -133,7 +154,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				try{
 					while (rs2.next()){
 						questions[j].type = rs2.getString(1);	
-						System.out.println(questions[j].type);
+						//System.out.println(questions[j].type);
 					}
 				} finally {
 					rs2.close();
@@ -168,6 +189,8 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		
 		}
 		if(action.equals("Submit")){
+			Answers();
+			
 			this.removeAll();
 			answered = true;
 			questionNo++;
@@ -175,6 +198,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				displayNextQuestion();
 			}
 			else{
+				
 			}
 		}
 		if(action.equals("Quit")){

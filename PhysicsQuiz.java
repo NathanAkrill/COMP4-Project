@@ -36,6 +36,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	String[] multianswers = new String[10];
 	String[] calcanswers = new String[10];
 	String[] eqanswers = new String[10];
+	List<String> incorrectAnswers = new LinkedList<String>();
 	public PhysicsQuiz(){
 		setLayout(new FlowLayout());
 		menuheader = new Label("Choose the topic you wish to revise.");
@@ -131,6 +132,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			multianswers[questionNo] = multiquestion.getSelectedItem();
 			if(multianswers[questionNo].equals(answers[questionNo])){
 				score++;
+				else incorrectAnswers.add(questions[questionNo].content);
 			}
 		}
 		else if(questions[questionNo].type.equals("Calculation")){
@@ -138,9 +140,11 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			eqanswers[questionNo] = equation.getText();
 			if(calcanswers[questionNo].equals(answers[questionNo])){
 				score++;
+				else incorrectAnswers.add(questions[questionNo].content);
 			}
 			if(eqanswers[questionNo].equals(answers[questionNo])){
 				score++;
+				else incorrectAnswers.add(questions[questionNo].content);
 			}
 		}
 		else{

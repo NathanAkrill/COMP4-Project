@@ -72,12 +72,13 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			while(rs0.next()){
 				System.out.println(rs0.getInt(1));
 				primaryKeys.add(rs0.getInt(1));
-			}
+			}	
 		}catch(SQLException ex){
 			System.out.println(ex);
 		}
 		for(int i = 0;i<questions.length;i++){
 			random = rand.nextInt(primaryKeys.size());
+			System.out.println(primaryKeys.get(i));
 			questions[i].id = primaryKeys.get(random);
 		}
 	}

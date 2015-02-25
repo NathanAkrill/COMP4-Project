@@ -26,6 +26,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	private Choice multiquestion;
 	private JTextField calculation;
 	private JTextField equation;
+	private Label incorrectQuestion;
 	private boolean answered = false;
 	String topic;
 	List<Integer> primaryKeys = new LinkedList<Integer>();
@@ -77,9 +78,12 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			System.out.println(ex);
 		}
 		for(int i = 0;i<questions.length;i++){
+		try{
 			random = rand.nextInt(primaryKeys.size());
 			System.out.println(primaryKeys.get(i));
+			questions[i] = new question();
 			questions[i].id = primaryKeys.get(random);
+		}catch(NullPointerException er){System.out.println(er + " " + i);}
 		}
 	}
 	public void getTopicAnswers() throws SQLException{
@@ -107,7 +111,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				add(questionheader);
 				multiquestion = new Choice();
 				add(multiquestion);
-				multiquestion.add(multianswers[questionNo]);
+				multiquestion.add(answers[questionNo]);
 				submit = new Button("Submit");
 				add(submit);
 				submit.addActionListener(this);
@@ -165,6 +169,13 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			System.out.println(questions[questionNo].content);
 			//Question about pigeons is broken.
 		}
+	}
+	public void Results(){
+		questionheader = new Label("Your final score is: " + score + " Here are the questions that you got wrong:");
+		for(int d=0;d < incorrectAnswers.size();d++){
+			incorrectQuestion = new Label(incorrectAnswers.get(d));
+		}
+		repaint();
 	}
 	public void Test() throws SQLException{
 		remove(topiclist);
@@ -234,16 +245,16 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		
 		}
 		if(action.equals("Submit")){
-			Answers();
 			
+			Answers();
 			this.removeAll();
 			answered = true;
 			questionNo++;
-			if(questionNo < questions.length){
+			if(questionNo < questions.length ){
 				displayNextQuestion();
 			}
 			else{
-				
+				Results();
 			}
 		}
 		if(action.equals("Quit")){

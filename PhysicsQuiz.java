@@ -40,7 +40,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	String[] eqanswers = new String[10];
 	List<String> incorrectAnswers = new LinkedList<String>();
 	public PhysicsQuiz(){
-		setLayout(new FlowLayout());
+		setLayout(new GridLayout(10,1));
 		menuheader = new Label("Choose the topic you wish to revise.");
 		add(menuheader);
 		topiclist = new Choice();
@@ -61,7 +61,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		quit.addActionListener(this);
 		addWindowListener(this);
 		setTitle("Physics Quiz");
-		setSize(500, 600);
+		setSize(1600, 600);
 		setVisible(true);
 	}
 	public void getTopicQuestions() throws SQLException{
@@ -151,16 +151,17 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		else if(questions[questionNo].type.equals("Calculation")){
 			calcanswers[questionNo] = calculation.getText();
 			eqanswers[questionNo] = equation.getText();
-			if(calcanswers[questionNo].equals(answers[questionNo])){
+			if(calcanswers[questionNo].equals(answers[questionNo]) && eqanswers[questionNo].equals(answers[questionNo])){
+				score++;
 				score++;
 			}
-			else {
-				incorrectAnswers.add(questions[questionNo].content);			
-			}
-			if(eqanswers[questionNo].equals(answers[questionNo])){
+			else if(eqanswers[questionNo].equals(answers[questionNo]) && !calcanswers[questionNo].equals(answers[questionNo])){
 				score++;
 			}
-			else {
+			else if(calcanswers[questionNo].equals(answers[questionNo]) && !eqanswers[questionNo].equals(answers[questionNo])){
+				score++;
+			}
+			else{
 				incorrectAnswers.add(questions[questionNo].content);
 			}	
 		}
@@ -172,10 +173,17 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	}
 	public void Results(){
 		questionheader = new Label("Your final score is: " + score + " Here are the questions that you got wrong:");
+		add(questionheader);
+		setVisible(true);
+		repaint();
+
+		
 		for(int d=0;d < incorrectAnswers.size();d++){
 			incorrectQuestion = new Label(incorrectAnswers.get(d));
+			add(incorrectQuestion);
+			setVisible(true);
+			repaint();
 		}
-		repaint();
 	}
 	public void Test() throws SQLException{
 		remove(topiclist);
@@ -185,15 +193,11 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		remove(menuheader);
 		
 		
-		for(int k=0;k<questions.length;k++){
-			questions[k] = new question();
-		}
-
 		for(int j=0;j<questions.length;j++){
 			try{
 				Connection c = getConnection();
 				Statement st = c.createStatement();
-				String sqlcontent = "SELECT QuestionContent FROM question WHERE QuestionID = " + primaryKeys.get(random);
+				String sqlcontent = "SELECT QuestionContent FROM question WHERE QuestionID = " + questions[j].id;
 				ResultSet rs1 = st.executeQuery(sqlcontent);
 				try{
 					while (rs1.next()){
@@ -203,7 +207,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				} finally {
 					rs1.close();
 				}
-				String sqltype = "SELECT QuestionType FROM question WHERE QuestionID = " + primaryKeys.get(random);
+				String sqltype = "SELECT QuestionType FROM question WHERE QuestionID = " + questions[j].id;
 				ResultSet rs2 = st.executeQuery(sqltype);
 				try{
 					while (rs2.next()){
@@ -213,7 +217,6 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				} finally {
 					rs2.close();
 				}
-				primaryKeys.remove(random);
 				st.close();
 				c.close();
 			}catch(SQLException ex){
@@ -250,7 +253,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			this.removeAll();
 			answered = true;
 			questionNo++;
-			if(questionNo < questions.length ){
+			if(questionNo < questions.length){
 				displayNextQuestion();
 			}
 			else{

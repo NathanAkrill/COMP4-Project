@@ -33,11 +33,13 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	int questionNo = 0;
 	int score = 0;
 	int random;
+	int multirandom;
 	question[] questions = new question[10];
 	String[] answers = new String[10];
 	String[] multianswers = new String[10];
 	String[] calcanswers = new String[10];
 	String[] eqanswers = new String[10];
+	multiAnswer[] answerOptions = new multiAnswer[10];
 	List<String> incorrectAnswers = new LinkedList<String>();
 	public PhysicsQuiz(){
 		setLayout(new GridLayout(10,1));
@@ -87,56 +89,111 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}
 	}
 	public void getTopicAnswers() throws SQLException{
-	for(int f=0;f<questions.length;f++){
-		try{
-			Connection c = getConnection();
-			Statement st = c.createStatement();
-			String sqlcontent = "SELECT AnswerContent FROM answer WHERE AnswerID = '" + questions[f].id + "'";
-			ResultSet rsA = st.executeQuery(sqlcontent);
-			try{
-				while (rsA.next()){
-					answers[f] = rsA.getString(1);
+		for(int f=0;f<questions.length;f++){
+				try{
+					Connection c = getConnection();
+					Statement st = c.createStatement();
+					String sqlcontent = "SELECT AnswerContent FROM answer WHERE AnswerID = '" + questions[f].id + "'";
+					ResultSet rsA = st.executeQuery(sqlcontent);
+					try{
+						while (rsA.next()){
+							answers[f] = rsA.getString(1);
+						}
+					} finally {
+						rsA.close();
+					}
+						
+				}catch(SQLException ex){
+					System.out.println(ex);
 				}
-			} finally {
-				rsA.close();
-			}
-		}catch(SQLException ex){
-			System.out.println(ex);
 		}
 	}
-	}
 	public void displayNextQuestion(){
+		for(int y=0;y<answerOptions.length;y++){
+			answerOptions[y] = new multiAnswer();
+		}
 		if(questions[questionNo].type.equals("Multiple Choice")){
+			for(int f=0;f<questions.length;f++){
+				for(int o=1;o<4;o++){
+					try{
+						Connection c = getConnection();
+						Statement st = c.createStatement();
+						String sqlcontent2 = "SELECT AnswerOption" + o + " FROM answer WHERE AnswerID = '" +questions[f].id + "'";
+						ResultSet rsB = st.executeQuery(sqlcontent2);
+						try{
+							while(rsB.next()){
+								if(o == 1){
+									answerOptions[f].answer1 = rsB.getString(1);
+								}
+								else if(o == 2){
+									answerOptions[f].answer2 = rsB.getString(1);
+								}
+								else if(o == 3){
+									answerOptions[f].answer3 = rsB.getString(1);
+								}
+							}
+						} finally {
+							rsB.close();
+						}
+					}catch(SQLException ex){
+						System.out.println(ex);
+					}
+				}
+			}
 				questionheader = new Label("Question " + questionNo + " : " + questions[questionNo].content);
 				add(questionheader);
 				multiquestion = new Choice();
 				add(multiquestion);
-				multiquestion.add(answers[questionNo]);
+				multirandom = rand.nextInt(4);
+				if(multirandom == 1){
+					multiquestion.add(answers[questionNo]);
+					multiquestion.add(answerOptions[questionNo].answer1);
+					multiquestion.add(answerOptions[questionNo].answer2);
+					multiquestion.add(answerOptions[questionNo].answer3);
+				}
+				else if(multirandom == 2){
+					multiquestion.add(answerOptions[questionNo].answer3);
+					multiquestion.add(answers[questionNo]);
+					multiquestion.add(answerOptions[questionNo].answer1);
+					multiquestion.add(answerOptions[questionNo].answer2);
+				}
+				else if(multirandom == 3){
+					multiquestion.add(answerOptions[questionNo].answer1);
+					multiquestion.add(answerOptions[questionNo].answer2);
+					multiquestion.add(answers[questionNo]);
+					multiquestion.add(answerOptions[questionNo].answer3);
+				}
+				else if(multirandom == 4){
+					multiquestion.add(answerOptions[questionNo].answer1);
+					multiquestion.add(answerOptions[questionNo].answer2);
+					multiquestion.add(answerOptions[questionNo].answer3);
+					multiquestion.add(answers[questionNo]);
+				}
 				submit = new Button("Submit");
 				add(submit);
 				submit.addActionListener(this);
 				setVisible(true);
 				repaint();
 		}
-			else if(questions[questionNo].type.equals("Calculation")){
-				questionheader = new Label("Question " + questionNo + " : " + questions[questionNo].content);
-				add(questionheader);
-				calculation = new JTextField(20);
-				add(calculation);
-				equation = new JTextField(20);
-				add(equation);
-				//add JTextField for Units.
-				submit = new Button("Submit");
-				add(submit);
-				submit.addActionListener(this);
-				setVisible(true);
-				repaint();
-			}
-			else{
-				System.out.println("Error. Cannot get results from query");
-				System.out.println(questions[questionNo].content);
-				//Question about pigeons is broken.
-			}
+		else if(questions[questionNo].type.equals("Calculation")){
+			questionheader = new Label("Question " + questionNo + " : " + questions[questionNo].content);
+			add(questionheader);
+			calculation = new JTextField(20);
+			add(calculation);
+			equation = new JTextField(20);
+			add(equation);
+			//add JTextField for Units.
+			submit = new Button("Submit");
+			add(submit);
+			submit.addActionListener(this);
+			setVisible(true);
+			repaint();
+		}
+		else{
+			System.out.println("Error. Cannot get results from query");
+			System.out.println(questions[questionNo].content);
+			//Question about pigeons is broken.
+		}
 	}
 	public void Answers(){
 		if(questions[questionNo].type.equals("Multiple Choice")){
@@ -172,7 +229,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}
 	}
 	public void Results(){
-		questionheader = new Label("Your final score is: " + score + " Here are the questions that you got wrong:");
+		questionheader = new Label("Your final score is: " + score + ". Here are the questions that you got wrong:");
 		add(questionheader);
 		setVisible(true);
 		repaint();

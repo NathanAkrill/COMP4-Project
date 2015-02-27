@@ -26,7 +26,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	private Choice multiquestion;
 	private JTextField calculation;
 	private JTextField equation;
+	private JTextField name;
 	private Label incorrectQuestion;
+	private Button finish;
 	private boolean answered = false;
 	String topic;
 	List<Integer> primaryKeys = new LinkedList<Integer>();
@@ -34,6 +36,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	int score = 0;
 	int random;
 	int multirandom;
+	String username;
 	question[] questions = new question[10];
 	String[] answers = new String[10];
 	String[] multianswers = new String[10];
@@ -42,6 +45,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	multiAnswer[] answerOptions = new multiAnswer[10];
 	List<String> incorrectAnswers = new LinkedList<String>();
 	public PhysicsQuiz(){
+		mainMenu();
+	}
+	public void mainMenu(){
 		setLayout(new GridLayout(10,1));
 		menuheader = new Label("Choose the topic you wish to revise.");
 		add(menuheader);
@@ -85,6 +91,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			System.out.println(primaryKeys.get(i));
 			questions[i] = new question();
 			questions[i].id = primaryKeys.get(random);
+			primaryKeys.remove(random);
 		}catch(NullPointerException er){System.out.println(er + " " + i);}
 		}
 	}
@@ -144,26 +151,26 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				add(questionheader);
 				multiquestion = new Choice();
 				add(multiquestion);
-				multirandom = rand.nextInt(4);
-				if(multirandom == 1){
+				multirandom = rand.nextInt(3);
+				if(multirandom == 0){
 					multiquestion.add(answers[questionNo]);
 					multiquestion.add(answerOptions[questionNo].answer1);
 					multiquestion.add(answerOptions[questionNo].answer2);
 					multiquestion.add(answerOptions[questionNo].answer3);
+				}
+				else if(multirandom == 1){
+					multiquestion.add(answerOptions[questionNo].answer3);
+					multiquestion.add(answers[questionNo]);
+					multiquestion.add(answerOptions[questionNo].answer1);
+					multiquestion.add(answerOptions[questionNo].answer2);
 				}
 				else if(multirandom == 2){
-					multiquestion.add(answerOptions[questionNo].answer3);
-					multiquestion.add(answers[questionNo]);
 					multiquestion.add(answerOptions[questionNo].answer1);
 					multiquestion.add(answerOptions[questionNo].answer2);
+					multiquestion.add(answers[questionNo]);
+					multiquestion.add(answerOptions[questionNo].answer3);
 				}
 				else if(multirandom == 3){
-					multiquestion.add(answerOptions[questionNo].answer1);
-					multiquestion.add(answerOptions[questionNo].answer2);
-					multiquestion.add(answers[questionNo]);
-					multiquestion.add(answerOptions[questionNo].answer3);
-				}
-				else if(multirandom == 4){
 					multiquestion.add(answerOptions[questionNo].answer1);
 					multiquestion.add(answerOptions[questionNo].answer2);
 					multiquestion.add(answerOptions[questionNo].answer3);
@@ -241,6 +248,13 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			setVisible(true);
 			repaint();
 		}
+		finish = new Button("Back to menu");
+		add(finish);
+		finish.addActionListener(this);
+		name = new JTextField("Enter your name");
+		add(name);
+		setVisible(true);
+		repaint();
 	}
 	public void Test() throws SQLException{
 		remove(topiclist);
@@ -319,6 +333,11 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}
 		if(action.equals("Quit")){
 			System.exit(0);
+		}
+		if(action.equals("Back to menu")){
+			username = name.getText();
+			this.removeAll();
+			mainMenu();
 		}
 	}
     public void windowClosing(WindowEvent e) {

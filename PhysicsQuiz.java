@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
+import java.io.*;
 
 public class PhysicsQuiz extends Frame implements WindowListener, ActionListener{
 	
@@ -48,6 +49,8 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		mainMenu();
 	}
 	public void mainMenu(){
+		this.removeAll();
+		repaint();
 		setLayout(new GridLayout(10,1));
 		menuheader = new Label("Choose the topic you wish to revise.");
 		add(menuheader);
@@ -71,6 +74,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		setTitle("Physics Quiz");
 		setSize(1600, 600);
 		setVisible(true);
+		repaint();
 	}
 	public void getTopicQuestions() throws SQLException{
 		try{
@@ -82,6 +86,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				System.out.println(rs0.getInt(1));
 				primaryKeys.add(rs0.getInt(1));
 			}	
+			c.close();
 		}catch(SQLException ex){
 			System.out.println(ex);
 		}
@@ -109,7 +114,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 					} finally {
 						rsA.close();
 					}
-						
+					c.close();
 				}catch(SQLException ex){
 					System.out.println(ex);
 				}
@@ -142,6 +147,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 						} finally {
 							rsB.close();
 						}
+						c.close();
 					}catch(SQLException ex){
 						System.out.println(ex);
 					}
@@ -185,9 +191,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		else if(questions[questionNo].type.equals("Calculation")){
 			questionheader = new Label("Question " + questionNo + " : " + questions[questionNo].content);
 			add(questionheader);
-			calculation = new JTextField(20);
+			calculation = new JTextField("Enter your final answer. (The number you get)");
 			add(calculation);
-			equation = new JTextField(20);
+			equation = new JTextField("Enter the final equation you used. (All values except constants should be full words, with capital letters and separated by a space e.g. Force = Mass x Acceleration. Constants using standard form write as _x10^_)");
 			add(equation);
 			//add JTextField for Units.
 			submit = new Button("Submit");
@@ -239,9 +245,6 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		questionheader = new Label("Your final score is: " + score + ". Here are the questions that you got wrong:");
 		add(questionheader);
 		setVisible(true);
-		repaint();
-
-		
 		for(int d=0;d < incorrectAnswers.size();d++){
 			incorrectQuestion = new Label(incorrectAnswers.get(d));
 			add(incorrectQuestion);
@@ -303,8 +306,8 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	public void actionPerformed(ActionEvent e){
 		String action = e.getActionCommand();
 		if(action.equals("Test!")){
+			questionNo = 0;
 			topic = topiclist.getSelectedItem();
-
 			try{
 				getTopicQuestions();
 				getTopicAnswers();
@@ -316,7 +319,14 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			}
 		}
 		if(action.equals("View previous scores on this topic")){
-		
+			this.removeAll();
+			questionheader = new Label("To find your previous scores, open the text file located in this folder with the title '*topic* scores'.");
+			add(questionheader);
+			finish = new Button("Back");
+			add(finish);
+			finish.addActionListener(this);
+			setVisible(true);
+			repaint();
 		}
 		if(action.equals("Submit")){
 			
@@ -334,9 +344,45 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		if(action.equals("Quit")){
 			System.exit(0);
 		}
+		if(action.equals("Back")){
+			mainMenu();
+		}
 		if(action.equals("Back to menu")){
 			username = name.getText();
-			this.removeAll();
+			if(username.equals("")){
+				username = "Student";
+			}
+			else{
+				username = username;
+			}
+			try{
+				if(topic == "Mechanics"){
+					BufferedWriter out = new BufferedWriter(new FileWriter("Mechanics Scores.txt", true));
+					out.newLine();
+					out.write(username + " got " + score + ".");
+					out.close();	
+				}
+				else if(topic == "DC Electricity"){
+					BufferedWriter out = new BufferedWriter(new FileWriter("DC Electricity Scores.txt", true));
+					out.write(username + " got " + score + ".");
+					out.close();
+				}
+				else if(topic == "Materials"){
+					BufferedWriter out = new BufferedWriter(new FileWriter("Materials Scores.txt", true));
+					out.write(username + " got " + score + ".");
+					out.close();
+				}
+				else if(topic == "Waves"){
+					BufferedWriter out = new BufferedWriter(new FileWriter("Waves Scores.txt", true));
+					out.write(username + " got " + score + ".");
+					out.close();
+				}
+				else if(topic == "Nature of Light"){
+					BufferedWriter out = new BufferedWriter(new FileWriter("Nature of Light Scores.txt", true));
+					out.write(username + " got " + score + ".");
+					out.close();
+				}
+			} catch (IOException ioe){System.out.println(ioe);}
 			mainMenu();
 		}
 	}

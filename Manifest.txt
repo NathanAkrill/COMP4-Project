@@ -1,1 +1,2 @@
-Main-Class: E:\COMP4\COMP4-Project\PhysicsQuiz.jar
+Main-Class: PhysicsQuiz
+Class-Path: mysql-connector-java-5.1.34-bin.jar

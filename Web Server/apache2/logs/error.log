@@ -1,5 +1,6 @@
-[Wed Mar 04 09:42:05.670286 2015] [mpm_winnt:notice] [pid 3672:tid 360] AH00455: Apache/2.4.6 (Win32) PHP/5.4.17 configured -- resuming normal operations
-[Wed Mar 04 09:42:05.686166 2015] [mpm_winnt:notice] [pid 3672:tid 360] AH00456: Apache Lounge VC10 Server built: Jul 16 2013 11:15:41
-[Wed Mar 04 09:42:05.686166 2015] [core:notice] [pid 3672:tid 360] AH00094: Command line: 'F:\\Web Server/apache2/bin/httpd_usbwv8.exe -d F:/Web Server/apache2'
-[Wed Mar 04 09:42:06.044223 2015] [mpm_winnt:notice] [pid 3672:tid 360] AH00418: Parent: Created child process 2644
-[Wed Mar 04 09:42:15.866524 2015] [mpm_winnt:notice] [pid 2644:tid 384] AH00354: Child: Starting 64 worker threads.
+[Tue Mar 17 09:35:01.925126 2015] [mpm_winnt:notice] [pid 3424:tid 360] AH00455: Apache/2.4.6 (Win32) PHP/5.4.17 configured -- resuming normal operations
+[Tue Mar 17 09:35:01.925126 2015] [mpm_winnt:notice] [pid 3424:tid 360] AH00456: Apache Lounge VC10 Server built: Jul 16 2013 11:15:41
+[Tue Mar 17 09:35:01.925126 2015] [core:notice] [pid 3424:tid 360] AH00094: Command line: 'E:\\COMP4\\COMP4-Project\\Web Server/apache2/bin/httpd_usbwv8.exe -d E:/COMP4/COMP4-Project/Web Server/apache2'
+[Tue Mar 17 09:35:01.963095 2015] [mpm_winnt:notice] [pid 3424:tid 360] AH00418: Parent: Created child process 1420
+[Tue Mar 17 09:35:03.671700 2015] [mpm_winnt:notice] [pid 1420:tid 384] AH00354: Child: Starting 64 worker threads.
+[Tue Mar 17 09:35:43.512294 2015] [mpm_winnt:warn] [pid 1420:tid 1020] (OS 64)The specified network name is no longer available.  : AH00341: winnt_accept: Asynchronous AcceptEx failed.

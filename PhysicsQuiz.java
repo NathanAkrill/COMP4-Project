@@ -7,14 +7,14 @@ import javax.swing.*;
 import java.io.*;
 
 public class PhysicsQuiz extends Frame implements WindowListener, ActionListener{
-	
-	public Connection getConnection() throws SQLException{
+	private Label errorlabel;
+	public Connection getConnection() throws SQLException{ //This method connects the program to the database
 		String user  = "root";
 		String pass = "usbw";
 		Connection c = null;
 		c = DriverManager.getConnection("jdbc:mysql://localhost:3307/pastpapers", user, pass);
 		System.out.println("Connected to database");
-		return c;
+		return c;	
 	}
 	private Random rand = new Random();
 	private Label menuheader;
@@ -48,7 +48,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	public PhysicsQuiz(){
 		mainMenu();
 	}
-	public void mainMenu(){
+	public void mainMenu(){ //What the user will see first, where they choose which topic to test on
 		this.removeAll();
 		repaint();
 		setLayout(new GridLayout(10,1));
@@ -76,7 +76,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		setVisible(true);
 		repaint();
 	}
-	public void getTopicQuestions() throws SQLException{
+	public void getTopicQuestions() throws SQLException{ //This gets the questionIDs from the database and stores them in an array. A list of primary keys is used to randomly select 10 questions.
 		try{
 			Connection c = getConnection();
 			Statement st = c.createStatement();
@@ -87,9 +87,11 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				primaryKeys.add(rs0.getInt(1));
 			}	
 			c.close();
-		}catch(SQLException ex){
-			System.out.println(ex);
-		}
+		}catch(SQLException ei){
+			errorlabel = new Label(ei.toString());
+			add(errorlabel);
+			setVisible(true);
+		}	
 		for(int i = 0;i<questions.length;i++){
 		try{
 			random = rand.nextInt(primaryKeys.size());
@@ -100,7 +102,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		}catch(NullPointerException er){System.out.println(er + " " + i);}
 		}
 	}
-	public void getTopicAnswers() throws SQLException{
+	public void getTopicAnswers() throws SQLException{ //This gets the answers for each question and stores them in an array.
 		for(int f=0;f<questions.length;f++){
 				try{
 					Connection c = getConnection();
@@ -120,7 +122,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				}
 		}
 	}
-	public void displayNextQuestion(){
+	public void displayNextQuestion(){ //This gets the next question from the array, then displays it appropriately, depending on whether it is a multiple choice or calculation question.
 		for(int y=0;y<answerOptions.length;y++){
 			answerOptions[y] = new multiAnswer();
 		}
@@ -205,10 +207,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		else{
 			System.out.println("Error. Cannot get results from query");
 			System.out.println(questions[questionNo].content);
-			//Question about pigeons is broken.
 		}
 	}
-	public void Answers(){
+	public void Answers(){ //This reads the user's answer and checks which they got right and counts their score. Incorrect questions are stored in an array which will be used to feedback to them.
 		if(questions[questionNo].type.equals("Multiple Choice")){
 			multianswers[questionNo] = multiquestion.getSelectedItem();
 			if(multianswers[questionNo].equals(answers[questionNo])){
@@ -238,10 +239,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		else{
 			System.out.println("Error. Cannot get results from query");
 			System.out.println(questions[questionNo].content);
-			//Question about pigeons is broken.
 		}
 	}
-	public void Results(){
+	public void Results(){ //This displays the results of the test. Each question that was answered incorrectly is displayed. The user enters their name to be stored in the scores file.
 		questionheader = new Label("Your final score is: " + score + ". Here are the questions that you got wrong:");
 		add(questionheader);
 		setVisible(true);
@@ -259,7 +259,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		setVisible(true);
 		repaint();
 	}
-	public void Test() throws SQLException{
+	public void Test() throws SQLException{ //This is where the question content is fetched from the database and stored in an array.
 		remove(topiclist);
 		remove(test);
 		remove(scores);
@@ -276,7 +276,6 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				try{
 					while (rs1.next()){
 						questions[j].content = rs1.getString(1);
-						//System.out.println(questions[j].content);
 					}
 				} finally {
 					rs1.close();
@@ -286,7 +285,6 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				try{
 					while (rs2.next()){
 						questions[j].type = rs2.getString(1);	
-						//System.out.println(questions[j].type);
 					}
 				} finally {
 					rs2.close();
@@ -305,7 +303,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 	}
 	public void actionPerformed(ActionEvent e){
 		String action = e.getActionCommand();
-		if(action.equals("Test!")){
+		if(action.equals("Test!")){ //When the test button is clicked, gets the topic and then runs the methods to get the questions and answers and run the test.
 			questionNo = 0;
 			topic = topiclist.getSelectedItem();
 			try{
@@ -318,7 +316,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				System.out.println(ex);
 			}
 		}
-		if(action.equals("View previous scores on this topic")){
+		if(action.equals("View previous scores on this topic")){ //Just a link to tell the user where they can find their scores.
 			this.removeAll();
 			questionheader = new Label("To find your previous scores, open the text file located in this folder with the title '*topic* scores'.");
 			add(questionheader);
@@ -328,7 +326,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			setVisible(true);
 			repaint();
 		}
-		if(action.equals("Submit")){
+		if(action.equals("Submit")){ //Runs the method that shows the answers. Also displays all the incorrect questions.
 			
 			Answers();
 			this.removeAll();
@@ -347,7 +345,7 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 		if(action.equals("Back")){
 			mainMenu();
 		}
-		if(action.equals("Back to menu")){
+		if(action.equals("Back to menu")){ //After the feedback, when back is clicked this will store the name of the user and their score in the appropriate text file then return to the menu.
 			username = name.getText();
 			if(username.equals("")){
 				username = "Student";

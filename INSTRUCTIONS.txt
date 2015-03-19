@@ -1,0 +1,15 @@
+------BETA TESTING INSTRUCTIONS------
+1.Inside the folder, click on the
+  "run.bat"
+2.Click "yes" on every prompt.
+3.Wait until the web server applicat-
+  ion has finished loading and shows
+  2 green ticks, then press enter on
+  the cmd.
+4.Use the program. (Please try to br-
+  eak it as much as possible.)
+5.Record any issues and improvements
+  on the testing document.
+6.Email JUST THE DOCUMENT back to me
+  when you are done.
+  (nathan.akrill@hotmail.co.uk)

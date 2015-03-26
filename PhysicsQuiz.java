@@ -187,6 +187,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 				submit = new Button("Submit");
 				add(submit);
 				submit.addActionListener(this);
+				finish = new Button("Back");
+				add(finish);
+				finish.addActionListener(this);
 				setVisible(true);
 				repaint();
 		}
@@ -201,6 +204,9 @@ public class PhysicsQuiz extends Frame implements WindowListener, ActionListener
 			submit = new Button("Submit");
 			add(submit);
 			submit.addActionListener(this);
+			finish = new Button("Back");
+			add(finish);
+			finish.addActionListener(this);
 			setVisible(true);
 			repaint();
 		}
